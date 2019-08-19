@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="PageRankTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-08-19T16:24:46" hostname="gelkin" time="0.195">
+  <properties/>
+  <testcase name="start" classname="PageRankTest" time="0.195"/>
+  <system-out><![CDATA[
+ 0.000 0.500 0.333 0.000 0.000 0.000 0.000
+ 0.333 0.000 0.000 0.000 0.500 0.000 0.000
+ 0.333 0.500 0.000 1.000 0.000 0.333 0.000
+ 0.333 0.000 0.333 0.000 0.500 0.333 0.000
+ 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+ 0.000 0.000 0.333 0.000 0.000 0.000 0.000
+ 0.000 0.000 0.000 0.000 0.000 0.333 1.000
+
+
+ 0.033
+ 0.012
+ 0.078
+ 0.049
+ 0.000
+ 0.027
+ 99.801
+
+
+ 13.682
+ 11.209
+ 22.420
+ 16.759
+ 7.143
+ 10.880
+ 17.907
+
+]]></system-out>
+  <system-err><![CDATA[Start test 1
+]]></system-err>
+</testsuite>

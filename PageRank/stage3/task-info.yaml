@@ -1,0 +1,6 @@
+type: edu
+files:
+- name: src/pagerank/Main.java
+  visible: true
+- name: test/PageRankTest.java
+  visible: false
