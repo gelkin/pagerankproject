@@ -28,6 +28,9 @@ subprojects {
         testCompile group: 'junit', name: 'junit', version: '4.12'
         compile 'com.github.hyperskill:hs-test:master-SNAPSHOT'
         compile group: 'gov.nist.math', name: 'jama', version: '1.0.2'
+        compile group: 'org.apache.commons', name: 'commons-math3', version: '3.0'
+        compile group: 'org.jfree', name: 'jfreechart', version: '1.0.19'
+
     }
 
     sourceSets {

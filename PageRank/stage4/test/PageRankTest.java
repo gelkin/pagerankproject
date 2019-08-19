@@ -1,3 +1,4 @@
+import Jama.Matrix;
 import org.hyperskill.hstest.v5.stage.BaseStageTest;
 import org.hyperskill.hstest.v5.testcase.CheckResult;
 import org.hyperskill.hstest.v5.testcase.TestCase;
@@ -5,69 +6,44 @@ import pagerank.Main;
 
 import java.util.List;
 
-public class PageRankTest extends BaseStageTest {
+class Attach {
+    String feedback;
+    String ans;
+    Attach(String feedback, String ans) {
+        this.feedback = feedback;
+        this.ans = ans;
+    }
+}
+
+public class PageRankTest extends BaseStageTest<Attach> {
     public PageRankTest() {
         super(Main.class);
     }
 
     @Override
-    public List<TestCase> generate() {
+    public List<TestCase<Attach>> generate() {
         return List.of(
-                new TestCase()
-        );
+                new TestCase().setInput("3 0.15\n0.333 0.000 0.500\n0.333 1.000 0.000\n0.333 0.000 0.500").setAttach(
+                        new Attach("Doesn't return correct result on a network of 3 nodes.", "32.375 35.231 32.375")),
+                new TestCase().setInput("10 0.5\n0.100 0.100 0.000 0.100 0.500 0.000 0.500 0.000 0.100 0.000\n0.100 0.100 0.000 0.100 0.000 0.000 0.000 0.000 0.100 0.000\n0.100 0.100 1.000 0.100 0.000 0.000 0.500 0.500 0.100 0.000\n0.100 0.100 0.000 0.100 0.000 0.000 0.000 0.000 0.100 0.000\n0.100 0.100 0.000 0.100 0.500 0.000 0.000 0.000 0.100 0.000\n0.100 0.100 0.000 0.100 0.000 0.500 0.000 0.000 0.100 0.000\n0.100 0.100 0.000 0.100 0.000 0.500 0.000 0.000 0.100 0.000\n0.100 0.100 0.000 0.100 0.000 0.000 0.000 0.500 0.100 1.000\n0.100 0.100 0.000 0.100 0.000 0.000 0.000 0.000 0.100 0.000\n0.100 0.100 0.000 0.100 0.000 0.000 0.000 0.000 0.100 0.000\n")
+                        .setAttach(new Attach("Doesn't return correct result on a network of 10 nodes.", "10.870 6.522 23.910 6.522 8.696 8.696 8.696 13.044 6.522 6.522")),
+                new TestCase().setInput("20 0.6\n0.050 0.000 0.000 0.000 0.250 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 1.000 1.000 0.000 0.000 0.000 0.000 0.250 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 1.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 1.000 0.250 0.000 0.500 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.500 0.000 0.500 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.250 0.000 0.000 0.250 0.000 0.000 0.333 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.250 0.000 0.500 0.000 0.500 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.500 0.333 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.250 0.500 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.250 0.000 0.000 0.000 0.000 0.000 0.333 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.500 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 1.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 1.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 1.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000\n0.050 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.000 0.050 0.000 0.050 0.050 0.000")
+                        .setAttach(new Attach("Doesn't return correct result on a network which has more than 10 nodes.", "3.798 12.954 2.725 2.725 7.148 7.369 6.454 5.509 5.973 2.725 4.428 5.344 4.682 4.329 5.342 5.931 4.360 2.725 2.725 2.725"))
+                );
     }
 
     @Override
-    public CheckResult check(String reply, Object attach) {
+    public CheckResult check(String reply, Attach attach) {
+        String[] trueRes = attach.ans.trim().split("\\s+");
+        int n = trueRes.length;
         String[] res = reply.trim().split("\\s+");
-        if (res.length != (7 * 7 + 7 + 7)) {
+        if (res.length != n) {
             return CheckResult.FALSE(
-                    "Your program should contain a matrix and two page rank vectors so 63 numbers (7 * 7 + 7 + 7)"
+                    "Your program should contain a page rank vector of size " + n + "."
             );
         }
-        int n = 7;
-        double[][] L2 = {
-                {0    , 1./2., 1./3., 0 , 0    , 0    , 0},
-                {1./3., 0    , 0    , 0 , 1./2., 0    , 0},
-                {1./3., 1./2., 0    , 1., 0    , 1./3., 0},
-                {1./3., 0    , 1./3., 0 , 1./2., 1./3., 0},
-                {0    , 0    , 0    , 0 , 0    , 0    , 0},
-                {0    , 0    , 1./3., 0 , 0    , 0    , 0},
-                {0    , 0    , 0    , 0 , 0    , 1./3., 1.}
-        };
-
-        double[][] matrix = new double[n][n];
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
-                double value;
-                try {
-                    value = Double.parseDouble(res[i * n + j].trim());
-                } catch (NumberFormatException ex) {
-                    return CheckResult.FALSE(
-                            "Your program outputted something which is not a number!"
-                    );
-                }
-                matrix[i][j] = value;
-            }
-        }
-
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (Math.abs(L2[i][j] - matrix[i][j]) > 1e-3) {
-                    return CheckResult.FALSE(
-                            "The matrix you outputted is incorrect."
-                    );
-                }
-            }
-        }
-
-        // page ranks
-        double[] pageRankWODamp = new double[] {0.033, 0.012, 0.078, 0.049, 0.000, 0.027, 99.801};
-        double[] pageRankWithDamp = new double[] {13.682, 11.209, 22.420, 16.759, 7.143, 10.880, 17.907};
-
-        // w/o damping
         double[] pageRank = new double[n];
-        for (int i = n * n; i < (n * n + n); ++i) {
+        for (int i = 0; i < n; ++i) {
             double value;
             try {
                 value = Double.parseDouble(res[i].trim());
@@ -76,38 +52,20 @@ public class PageRankTest extends BaseStageTest {
                         "Your program outputted something which is not a number!"
                 );
             }
-            pageRank[i - n * n] = value;
+            pageRank[i] = value;
         }
 
+        double[] pageRankTrue = new double[n];
         for (int i = 0; i < n; ++i) {
-            if (Math.abs(pageRankWODamp[i] - pageRank[i]) > 1e-2) {
-                return CheckResult.FALSE(
-                        "The first Page Rank you outputted is incorrect."
-                );
-            }
+            double value = Double.parseDouble(trueRes[i].trim());
+            pageRankTrue[i] = value;
         }
 
-        // with damping
-        for (int i = n * n + n; i < (n * n + n + n); ++i) {
-            double value;
-            try {
-                value = Double.parseDouble(res[i].trim());
-            } catch (NumberFormatException ex) {
-                return CheckResult.FALSE(
-                        "Your program outputted something which is not a number!"
-                );
-            }
-            pageRank[i - (n * n + n)] = value;
+        Matrix mPageRank = new Matrix(pageRank, 1); // this is a vector
+        Matrix mPageRankTrue = new Matrix(pageRankTrue, 1); // this is a vector
+        if (mPageRank.minus(mPageRankTrue).normInf() > 0.01) {
+            return CheckResult.FALSE(attach.feedback);
         }
-
-        for (int i = 0; i < n; ++i) {
-            if (Math.abs(pageRankWithDamp[i] - pageRank[i]) > 1e-2) {
-                return CheckResult.FALSE(
-                        "The second Page Rank you outputted is incorrect."
-                );
-            }
-        }
-
         return CheckResult.TRUE;
     }
 }
