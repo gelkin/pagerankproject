@@ -14,16 +14,16 @@ public class Main {
 
     public void plotPageRank() {
         Matrix m = generate_internet(100);
-        Matrix res = pageRank(m, 0.9);
+        Matrix res = pageRank(m, 0.5);
         res.print(3, 8);
         double[] values = res.getColumnPackedCopy();
         for (double val : values) {
             System.out.println(val);
         }
-
     }
 
      public List<String> searhQuery(List<String> webNames, Matrix linkMatrix, String query) {
+         int topN = Math.min(webNames.size(), 5);  // top 5
          Matrix rankMatrix = pageRank(linkMatrix, 0.5);
          double[] rank = rankMatrix.getColumnPackedCopy();
          List<String> res = new ArrayList<>();
@@ -33,23 +33,22 @@ public class Main {
                  break;
              }
          }
-         // top 5
          int[] sortedIndices = IntStream.range(0, rank.length)
-                 .boxed().sorted(Comparator.comparingDouble(i -> rank[i]))
+                 .boxed().sorted(Comparator.comparingDouble(i -> -rank[i]))
                  .mapToInt(ele -> ele).toArray();
          if (res.size() > 0) {
-             for (int i = 0; i < 4; ++i) {
+             for (int i = 0; i < (topN - 1); ++i) {
                  if (!webNames.get(sortedIndices[i]).equals(query)) {
                      res.add(webNames.get(sortedIndices[i]));
                  } else {
-                     for (int j = i + 1; j < 5; ++j) {
+                     for (int j = i + 1; j < topN; ++j) {
                          res.add(webNames.get(sortedIndices[j]));
                      }
                      break;
                  }
              }
          } else {
-             for (int i = 0; i < 5; ++i) {
+             for (int i = 0; i < topN; ++i) {
                  res.add(webNames.get(sortedIndices[i]));
              }
          }
@@ -94,25 +93,6 @@ public class Main {
         return cMatrix;
     }
 
-    public double[] eigenPageRank(Matrix m) {
-        EigenvalueDecomposition eigen = m.eig();
-        final double [] realPart = eigen.getRealEigenvalues();
-        Matrix evectors = eigen.getV();
-        int[] sortedIndicesEvalues= IntStream.range(0, realPart.length)
-                .boxed().sorted(Comparator.comparingDouble(i -> -realPart[i]))
-                .mapToInt(ele -> ele).toArray();
-        int colDim = evectors.getColumnDimension();
-        double[] flatEvectors = evectors.getColumnPackedCopy();
-        double[] principalEvector = Arrays.stream(flatEvectors,
-                colDim * sortedIndicesEvalues[0],
-                colDim * (sortedIndicesEvalues[0] + 1))
-                .toArray();
-        double sum = Arrays.stream(principalEvector).sum();
-        return DoubleStream.of(principalEvector).map(p -> 100 * p / sum).toArray();
-    }
-
-
-
     public Matrix pageRank(Matrix linkMatrix, double d) {
         int n = linkMatrix.getRowDimension();
         double[][] ones = IntStream
@@ -134,8 +114,136 @@ public class Main {
         return c;
     }
 
+    /*
+5
+A B C D E
+0.20000000 0.00000000 0.00000000 0.50000000 0.50000000
+0.20000000 1.00000000 0.00000000 0.00000000 0.00000000
+0.20000000 0.00000000 0.50000000 0.00000000 0.00000000
+0.20000000 0.00000000 0.50000000 0.00000000 0.00000000
+0.20000000 0.00000000 0.00000000 0.50000000 0.50000000
+C
+
+6
+A B C D E F
+0.000 0.000 0.167 0.167 0.000 0.000
+0.500 0.000 0.167 0.167 0.000 0.000
+0.500 0.500 0.167 0.167 0.000 0.500
+0.000 0.000 0.167 0.167 1.000 0.000
+0.000 0.500 0.167 0.167 0.000 0.000
+0.000 0.000 0.167 0.167 0.000 0.500
+B
+
+===
+input
+6
+A B C D E F
+0.000 0.000 0.167 0.167 0.000 0.000
+0.500 0.000 0.167 0.167 0.000 0.000
+0.500 0.500 0.167 0.167 0.000 0.500
+0.000 0.000 0.167 0.167 1.000 0.000
+0.000 0.500 0.167 0.167 0.000 0.000
+0.000 0.000 0.167 0.167 0.000 0.500
+E
+
+output
+E
+C
+D
+F
+B
+
+
+input
+6
+A B C D E F
+0.000 0.000 0.167 0.167 0.000 0.000
+0.500 0.000 0.167 0.167 0.000 0.000
+0.500 0.500 0.167 0.167 0.000 0.500
+0.000 0.000 0.167 0.167 1.000 0.000
+0.000 0.500 0.167 0.167 0.000 0.000
+0.000 0.000 0.167 0.167 0.000 0.500
+C
+
+output
+C
+D
+F
+E
+B
+
+
+input
+4
+A B C D
+0.250 0.250 0.000 0.000
+0.250 0.250 0.000 1.000
+0.250 0.250 1.000 0.000
+0.250 0.250 0.000 0.000
+A
+
+output
+A
+C
+B
+D
+
+
+input
+1
+A
+1
+A
+
+output
+A
+
+===
+
+3
+A B C
+0.00000000 0.33333333 0.00000000
+1.00000000 0.33333333 0.00000000
+0.00000000 0.33333333 1.00000000
+B
+
+1
+A
+1
+A
+
+     */
+    // todo remove
+    public void sandbox() {
+//        Matrix m = generate_internet(4);
+//        m.print(3, 3);
+        try (Scanner scan = new Scanner(System.in)) {
+            scan.hasNext();
+            int n = scan.nextInt();
+            // todo hasNext()
+//            System.out.println(n);
+            List<String> names = new ArrayList<>();
+            for (int i = 0; i < n; ++i) {
+                names.add(scan.next());
+            }
+//            System.out.println(names);
+            double[][] values = new double[n][n];
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    values[i][j] = scan.nextDouble();
+                }
+            }
+            String query = scan.next();
+            Matrix m = new Matrix(values);
+            List<String> res = searhQuery(names, m, query);
+            for (String x : res) {
+                System.out.println(x);
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        new Main().plotPageRank();
+        new Main().sandbox();
 //        Main obj = new Main();
 //        Scanner scan = new Scanner(System.in);
 //        int n = scan.nextInt();
